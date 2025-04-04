@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luca Resconi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            
+        }
+        body {
+            overflow-y: scroll;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            width: 100%;
+            padding-right: 15px; /* Aggiungi un padding a destra per compensare la barra di scorrimento */
+        }
+        .container {
+            width: calc(100% - 15px); /* Sottrai la larghezza della barra di scorrimento */
+            margin: 0 auto;
+            padding: 0;
+        }
+        .title-container {
+            position: fixed;
+            top: 45px;
+            left: 0;
+            width: 100%;
+            background-color: #000;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+        }
+        .title-sizer {
+            width: 100%;
+        }
+        .title-sizer img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .gallery {
+            position: relative;
+            columns: 2; /* Numero di colonne predefinito per schermi piccoli */
+            column-gap: 10px;
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 60px; /* Spazio per il footer */
+            margin-top: 0; /* Rimuovi il margine predefinito */
+        }
+        .gallery-item {
+            break-inside: avoid;
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+        /* .gallery-item:hover {
+            transform: scale(1.02);
+        } */
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background-color: #000;
+            padding: 10px;
+            margin: 0;
+            z-index: 100;
+            width: 100%;
+        }
+        .social-links {
+            margin: 0;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-align: center;
+            width: 100%;
+        }
+        .social-links a {
+            color: #00ff00; /* Verde "matrix-like" */
+            text-decoration: none;
+            margin: 0 10px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        .separator {
+            margin: 0 5px;
+            color: #00ff00; /* Verde "matrix-like" */
+        }
+
+        @media screen and (max-width: 1200px) {
+            h1 { font-size: 8vh; }
+        }
+        @media screen and (max-width: 800px) {
+            h1 { font-size: 6vh; }
+        }
+        @media screen and (max-width: 480px) {
+            h1 { 
+                font-size: 4vh;
+                width: 100vw;
+                letter-spacing: 0.5em;
+                padding: 0 10px;
+            }
+            .nav-menu { 
+                padding: 15px 10px;
+            }
+            .nav-menu a {
+                margin: 0 10px;
+            }
+            .info { margin-top: 10vh; }
+            .title-container {
+                width: 100vw;
+                overflow: hidden;
+            }
+            .title-sizer {
+                width: 100%;
+            }
+        }
+
+        /* Media query per schermi più grandi */
+        @media (min-width: 1024px) {
+            .gallery {
+                columns: 300px 4;
+            }
+
+        }
+
+        /* Media query per schermi molto piccoli */
+        @media (max-width: 430px) {
+            .gallery {
+                columns: 200px 2;
+            }
+
+        }
+
+        @media screen and (min-width: 765px) {
+            .title-sizer {
+                height: 8.33vh; /* 1/12 dell'altezza dello schermo */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .title-sizer img {
+                width: auto; /* Mantiene le proporzioni */
+                height: 100%; /* Si adatta all'altezza del contenitore */
+            }
+        }
+
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #000;
+            padding: 10px;
+            margin: 0;
+            z-index: 101;
+            width: 100%;
+            text-align: center;
+        }
+        .nav-menu a {
+            color: #00ff00; /* Verde "matrix-like" */
+            text-decoration: none;
+            margin: 0 10px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        .nav-menu a:hover,
+        .social-links a:hover {
+            text-decoration: underline; /* Sottolinea il testo al passaggio del mouse */
+            color: #00cc00; /* Cambia il colore se desideri un effetto aggiuntivo */
+        }
+
+        .info {
+            padding: 0 10%; /* 10% di padding a destra e sinistra */
+            margin-top: 0; /* Rimuovi il margine predefinito */
+        }
+
+        .info-block {
+            margin: 20px 0; /* Spazio tra i blocchi */
+            text-align: center; /* Allinea il testo al centro */
+        }
+
+        @media screen and (min-width: 770px) {
+            .gallery {
+                columns: 3; /* Imposta 3 colonne per schermi da tablet in su */
+                padding: 10px 15%; /* Aggiungi padding laterale del 15% */
+            }
+        }
+
+        .green-text {
+            color: #00ff00; /* Verde "matrix-like" */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <a href="#projects" onclick="showSection('projects')">PROJECTS</a>
+            <span class="separator">|</span>
+            <a href="#info" onclick="showSection('info')">INFO</a>
+            <span class="separator">|</span>
+            <a href="#contact" onclick="showSection('contact')">CONTACT</a>
+        </nav>
+
+        <div class="title-container">
+            <div class="title-sizer">
+                <img src="titolo.png" alt="Luca Resconi">
+            </div>
+        </div>
+
+        <div class="info" style="display: none;">
+            <div class="info-block">
+                <h3 class="green-text" style="text-transform: uppercase; text-align: center;">About</h3>
+                <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+
+            <div class="info-block">
+                <h3 class="green-text" style="text-transform: uppercase; text-align: center;">Experience</h3>
+                <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+
+            <div class="info-block">
+                <h3 class="green-text" style="text-transform: uppercase; text-align: center;">Skills</h3>
+                <p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+
+        <div class="contact" style="display: none;">
+            <div class="info-block">
+                <h3 class="green-text" style="text-transform: uppercase; text-align: center;">Contact</h3>
+                <p style="text-align: center;">Per ulteriori informazioni, puoi contattarmi via email a lucaresconi@gmail.com o visitare il mio profilo LinkedIn.</p>
+            </div>
+        </div>
+
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="Interior Design 1">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c" alt="Interior Design 2">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3" alt="Architecture 1">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600573472592-401b489a3cdc" alt="Fashion 1">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea" alt="Interior Design 3">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498f" alt="Architecture 2">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d" alt="Interior Design 4">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea" alt="Architecture 3">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600210491892-03d54c0aaf87" alt="Fashion 2">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c" alt="Interior Design 5">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37" alt="Architecture 4">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615876234886-fd9a39fda97f" alt="Fashion 3">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 6">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84" alt="Architecture 5">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 7">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 4">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37" alt="Architecture 6">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615876234886-fd9a39fda97f" alt="Fashion 5">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0" alt="Interior Design 8">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 6">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0" alt="Interior Design 9">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84" alt="Architecture 7">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 10">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 7">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37" alt="Architecture 8">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615876234886-fd9a39fda97f" alt="Fashion 8">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0" alt="Interior Design 11">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84" alt="Architecture 9">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 12">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 9">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37" alt="Architecture 10">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615876234886-fd9a39fda97f" alt="Fashion 10">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0" alt="Interior Design 13">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84" alt="Architecture 11">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 14">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 11">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37" alt="Architecture 12">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615876234886-fd9a39fda97f" alt="Fashion 12">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0" alt="Interior Design 15">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84" alt="Architecture 13">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 16">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 13">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37" alt="Architecture 14">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615876234886-fd9a39fda97f" alt="Fashion 14">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0" alt="Interior Design 17">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84" alt="Architecture 15">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 18">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 15">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37" alt="Architecture 16">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1615876234886-fd9a39fda97f" alt="Fashion 16">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0" alt="Interior Design 19">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84" alt="Architecture 17">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace" alt="Interior Design 20">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45" alt="Fashion 17">
+            </div>
+        </div>
+        
+
+        
+        <footer>
+            <div class="social-links">
+                <a href="https://www.instagram.it/prova" target="_blank">INSTAGRAM</a>
+                <span class="separator">|</span>
+                <a href="mailto:lucaresconi@gmail.com">MAIL</a>
+                <span class="separator">|</span>
+                <a href="https://www.linkedin.com/prova" target="_blank">LINKEDIN</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function showSection(section) {
+            // Nascondi tutti i div
+            document.querySelector('.gallery').style.display = 'none';
+            document.querySelector('.info').style.display = 'none';
+            document.querySelector('.contact').style.display = 'none';
+
+            // Calcola l'altezza del title-container e del nav-menu
+            const titleHeight = document.querySelector('.title-container').offsetHeight;
+            const navMenuHeight = document.querySelector('.nav-menu').offsetHeight;
+
+            // Mostra la sezione selezionata
+            if (section === 'projects') {
+                document.querySelector('.gallery').style.display = 'block';
+                document.querySelector('.gallery').style.marginTop = `${titleHeight + navMenuHeight}px`;
+            } else if (section === 'info') {
+                document.querySelector('.info').style.display = 'block';
+                document.querySelector('.info').style.marginTop = `${titleHeight + navMenuHeight}px`;
+            } else if (section === 'contact') {
+                document.querySelector('.contact').style.display = 'block';
+                document.querySelector('.contact').style.marginTop = `${titleHeight + navMenuHeight}px`;
+            }
+        }
+
+        function updateMargins() {
+            const titleHeight = document.querySelector('.title-container').offsetHeight;
+            const navMenuHeight = document.querySelector('.nav-menu').offsetHeight;
+
+            // Imposta il margine superiore per la gallery
+            document.querySelector('.gallery').style.marginTop = `${titleHeight + navMenuHeight}px`;
+
+            // Imposta il margine superiore per INFO
+            document.querySelector('.info').style.marginTop = `${titleHeight + navMenuHeight}px`;
+
+            // Imposta il margine superiore per CONTACT
+            document.querySelector('.contact').style.marginTop = `${titleHeight + navMenuHeight}px`;
+        }
+
+        function adjustBodyPadding() {
+            updateMargins();
+            if (window.innerWidth > document.documentElement.clientWidth) {
+                document.body.style.paddingRight = '15px'; // Barra di scorrimento visibile
+            } else {
+                document.body.style.paddingRight = '0'; // Barra di scorrimento non visibile
+            }
+        }
+
+        // Chiama la funzione all'apertura della pagina
+        adjustBodyPadding();
+
+        // Aggiungi un listener per il ridimensionamento della finestra
+        window.addEventListener('resize', function() {
+            updateMargins();
+            adjustBodyPadding();
+        });
+    </script>
+</body>
+</html> 
